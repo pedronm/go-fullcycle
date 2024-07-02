@@ -1,0 +1,17 @@
+# Build & Compile
+FROM golang:1.22.3-alpine as Builder
+
+WORKDIR /app
+
+RUN echo $'package main; func main(){print(\"Full Cycle Rocks!!\");}' > main.go
+
+RUN go mod init full-go.com
+
+RUN env GOOS=linux GOARCH=amd64 go build main.go
+
+# RUN 1,86MB
+FROM golang:1.22
+
+COPY --from=Builder ./app .
+
+CMD ["./full-go"]
